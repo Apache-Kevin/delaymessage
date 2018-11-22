@@ -3,8 +3,9 @@
  * Created by human.
  * User: Weinan Tang <twn39@163.com>
  * Date: 2018/11/22
- * Time: 下午1:26
+ * Time: 下午1:26.
  */
+
 namespace RabbitMQ\Message;
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -37,12 +38,12 @@ class DelayMessage implements DelayMessageInterface
         if (empty($this->queue)) {
             throw new MQException('RabbitMQ delay queue is required !');
         }
-        $this->channel->exchange_declare($this->exchange, 'x-delayed-message', false, true, false, false, false, new AMQPTable(array(
+        $this->channel->exchange_declare($this->exchange, 'x-delayed-message', false, true, false, false, false, new AMQPTable([
             'x-delayed-type' => 'fanout',
-        )));
-        $this->channel->queue_declare($this->queue, false, false, false, false, false, new AMQPTable(array(
+        ]));
+        $this->channel->queue_declare($this->queue, false, false, false, false, false, new AMQPTable([
             'x-dead-letter-exchange' => 'delayed',
-        )));
+        ]));
         $this->channel->queue_bind($this->queue, $this->exchange);
         $this->bound = true;
 
@@ -68,15 +69,17 @@ class DelayMessage implements DelayMessageInterface
         if (!$this->bound) {
             $this->bind();
         }
-        $headers = new AMQPTable(array('x-delay' => $ttl));
-        $message = new AMQPMessage(json_encode($message), array('delivery_mode' => 2));
+        $headers = new AMQPTable(['x-delay' => $ttl]);
+        $message = new AMQPMessage(json_encode($message), ['delivery_mode' => 2]);
         $message->set('application_headers', $headers);
         $this->channel->basic_publish($message, $this->exchange);
+
         return true;
     }
 
     /**
      * @param \Closure $callback
+     *
      * @throws MQException
      * @throws \ErrorException
      */
