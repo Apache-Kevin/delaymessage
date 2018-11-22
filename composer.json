@@ -1,0 +1,21 @@
+{
+    "name": "monster/delaymessage",
+    "authors": [
+        {
+            "name": "twn39",
+            "email": "twn39@163.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "RabbitMQ\\Message\\": "src"
+        }
+    },
+    "require": {
+        "php-amqplib/php-amqplib": "^2.8",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "^5.1"
+    }
+}
